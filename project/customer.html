@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Portal - Mill Management</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/customer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-industry"></i>
+                <span>Customer Portal</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#products" class="nav-link active">Products</a></li>
+                <li><a href="#orders" class="nav-link">My Orders</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Customer</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+                        <a href="#orders"><i class="fas fa-shopping-bag"></i> My Orders</a>
+                        <a href="#history"><i class="fas fa-history"></i> Order History</a>
+                        <a href="#messages"><i class="fas fa-envelope"></i> Messages</a>
+                    </div>
+                </div>
+                <button id="theme-toggle" class="btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="container">
+                <div class="search-bar">
+                    <input type="text" id="product-search" placeholder="Search grains, beans, spices...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="category-filters">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="grain">Grains</button>
+                    <button class="filter-btn" data-category="legume">Legumes</button>
+                    <button class="filter-btn" data-category="spice">Spices</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Grid -->
+        <section id="products" class="products-section">
+            <div class="container">
+                <h2 class="section-title">Available Products</h2>
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Form -->
+        <div id="order-modal" class="modal">
+            <div class="modal-content order-form-card">
+                <div class="order-header">
+                    <h2>Order Details</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="order-product-info">
+                    <div class="product-image">
+                        <img id="order-product-img" src="" alt="">
+                    </div>
+                    <div class="product-details">
+                        <h3 id="order-product-name"></h3>
+                        <p id="order-product-desc"></p>
+                        <div class="price-info">
+                            <span class="price" id="order-product-price"></span>
+                            <span class="milling-price" id="order-milling-price"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-form">
+                    <div class="form-group">
+                        <label for="order-quantity">Quantity (kg):</label>
+                        <input type="number" id="order-quantity" min="1" value="1">
+                    </div>
+                    <div class="order-summary">
+                        <div class="summary-item">
+                            <span>Product Cost:</span>
+                            <span id="summary-product-cost">0 ETB</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Milling Cost:</span>
+                            <span id="summary-milling-cost">0 ETB</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Order Fee:</span>
+                            <span id="summary-order-fee">20 ETB</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>Total:</span>
+                            <span id="summary-total">0 ETB</span>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-primary" id="buy-now-btn">Buy Now</button>
+                        <button class="btn btn-secondary" id="add-cart-btn">Add to Cart</button>
+                        <button class="btn btn-icon" id="favorite-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Modal -->
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Customer Registration</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="registration-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full-name">Full Name *</label>
+                            <input type="text" id="full-name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" pattern="\+251[97]\d{8}" placeholder="+2519xxxxxxxx" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="backup-phone">Backup Phone</label>
+                            <input type="tel" id="backup-phone" pattern="\+251[97]\d{8}" placeholder="+2519xxxxxxxx">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address *</label>
+                        <textarea id="address" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-method">Payment Method *</label>
+                        <select id="payment-method" required>
+                            <option value="">Select Payment Method</option>
+                            <option value="cbe">CBE</option>
+                            <option value="telebirr">Telebirr</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="cbe-fields" style="display: none;">
+                        <label for="cbe-account">CBE Account Number *</label>
+                        <input type="text" id="cbe-account" pattern="1000\d+" placeholder="1000xxxxxxxx">
+                    </div>
+                    
+                    <div class="form-group" id="telebirr-fields" style="display: none;">
+                        <label for="telebirr-number">Telebirr Number *</label>
+                        <input type="tel" id="telebirr-number" pattern="\+2519\d{8}" placeholder="+2519xxxxxxxx">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>National ID Photos *</label>
+                        <div class="id-upload">
+                            <div class="upload-section">
+                                <label for="id-front">Front Side</label>
+                                <input type="file" id="id-front" accept="image/*" required>
+                                <div class="upload-preview" id="front-preview"></div>
+                            </div>
+                            <div class="upload-section">
+                                <label for="id-back">Back Side</label>
+                                <input type="file" id="id-back" accept="image/*" required>
+                                <div class="upload-preview" id="back-preview"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="scripts/main.js"></script>
+    <script src="scripts/customer.js"></script>
+</body>
+</html>

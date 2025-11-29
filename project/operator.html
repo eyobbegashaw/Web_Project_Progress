@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operator Portal - Mill Management</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/operator.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-industry"></i>
+                <span>Operator Portal</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#tasks" class="nav-link active">My Tasks</a></li>
+                <li><a href="#orders" class="nav-link">Orders</a></li>
+                <li><a href="#messages" class="nav-link">Messages</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Operator</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#profile"><i class="fas fa-user-edit"></i> Profile</a>
+                    </div>
+                </div>
+                <button id="theme-toggle" class="btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Operator Login -->
+            <section id="operator-login" class="login-section">
+                <div class="login-card">
+                    <h2>Operator Login</h2>
+                    <form id="operator-login-form">
+                        <div class="form-group">
+                            <label for="operator-username">Username</label>
+                            <input type="text" id="operator-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="operator-password">Password</label>
+                            <input type="password" id="operator-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Operator Dashboard -->
+            <section id="operator-dashboard" class="dashboard-section" style="display: none;">
+                <div class="dashboard-header">
+                    <h2>Welcome, <span id="operator-name">Operator</span></h2>
+                    <div class="assigned-tasks">
+                        <h3>Assigned Tasks</h3>
+                        <div id="task-list">
+                            <!-- Tasks will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Management -->
+                <div class="orders-section">
+                    <h2>Pending Orders</h2>
+                    <div class="orders-grid" id="pending-orders">
+                        <!-- Orders will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Payment Control -->
+                <div class="payment-section">
+                    <h2>Payment Control</h2>
+                    <div class="payment-stats">
+                        <div class="payment-card">
+                            <h3>Today's Earnings</h3>
+                            <p class="amount" id="today-earnings">0 ETB</p>
+                        </div>
+                        <div class="payment-card">
+                            <h3>Pending Payments</h3>
+                            <p class="amount" id="pending-payments">0 ETB</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="send-daily-report">
+                        Send Daily Report to Admin
+                    </button>
+                </div>
+
+                <!-- Messaging System -->
+                <div class="messaging-section">
+                    <h2>Messaging</h2>
+                    <div class="chat-container">
+                        <div class="chat-sidebar">
+                            <div class="chat-contacts">
+                                <div class="contact active" data-contact="admin">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Admin</span>
+                                </div>
+                                <div class="contact" data-contact="customer-support">
+                                    <i class="fas fa-headset"></i>
+                                    <span>Customer Support</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-main">
+                            <div class="chat-header">
+                                <h3 id="current-contact">Admin</h3>
+                            </div>
+                            <div class="chat-messages" id="chat-messages">
+                                <!-- Messages will be loaded here -->
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" id="message-input" placeholder="Type your message...">
+                                <button id="send-message" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                                <input type="file" id="file-upload" style="display: none;" accept="image/*">
+                                <button id="upload-file" class="btn btn-icon">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="scripts/main.js"></script>
+    <script src="scripts/operator.js"></script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Mill Management</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-industry"></i>
+                <span>Admin Dashboard</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#dashboard" class="nav-link active">Dashboard</a></li>
+                <li><a href="#operators" class="nav-link">Operators</a></li>
+                <li><a href="#products" class="nav-link">Products</a></li>
+                <li><a href="#messages" class="nav-link">Messages</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Admin</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#calendar"><i class="fas fa-calendar"></i> Calendar</a>
+                        <a href="#tax"><i class="fas fa-receipt"></i> Tax Management</a>
+                    </div>
+                </div>
+                <button id="theme-toggle" class="btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="language-toggle" class="btn-icon">
+                    <i class="fas fa-globe"></i> EN
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Login Section -->
+        <section id="admin-login" class="login-section">
+            <div class="container">
+                <div class="login-card">
+                    <h2>Admin Login</h2>
+                    <form id="admin-login-form">
+                        <div class="form-group">
+                            <label for="admin-username">Username</label>
+                            <input type="text" id="admin-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-password">Password</label>
+                            <input type="password" id="admin-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-secret">Secret Code</label>
+                            <input type="password" id="admin-secret" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard (Hidden until login) -->
+        <section id="admin-dashboard" class="dashboard-section" style="display: none;">
+            <div class="container">
+                <!-- Statistics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-customers">1,254</h3>
+                            <p>Registered Customers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="online-orders">892</h3>
+                            <p>Online Orders</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="grain-stock">15,680 kg</h3>
+                            <p>Grain in Warehouse</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="monthly-revenue">245,600 ETB</h3>
+                            <p>Monthly Revenue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Sales by Grain Type</h3>
+                        <canvas id="grainSalesChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Profit & Loss Analysis</h3>
+                        <canvas id="profitLossChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Customer Distribution</h3>
+                        <canvas id="customerChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Revenue Sources</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Operator Management -->
+                <div class="management-section">
+                    <h2>Operator Management</h2>
+                    <div class="management-actions">
+                        <button class="btn btn-primary" id="add-operator-btn">
+                            <i class="fas fa-plus"></i> Add Operator
+                        </button>
+                        <button class="btn btn-secondary" id="assign-tasks-btn">
+                            <i class="fas fa-tasks"></i> Assign Tasks
+                        </button>
+                    </div>
+                    <div class="operators-grid" id="operators-grid">
+                        <!-- Operators will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Product Management -->
+                <div class="management-section">
+                    <h2>Product Management</h2>
+                    <button class="btn btn-primary" id="add-product-btn">
+                        <i class="fas fa-plus"></i> Add New Product
+                    </button>
+                    <div class="products-table">
+                        <table id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price (ETB/kg)</th>
+                                    <th>Milling Price</th>
+                                    <th>Stock (kg)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Products will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Product Modal -->
+        <div id="add-product-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add New Product</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="add-product-form">
+                    <div class="form-group">
+                        <label for="product-name">Product Name</label>
+                        <input type="text" id="product-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-category">Category</label>
+                        <select id="product-category" required>
+                            <option value="">Select Category</option>
+                            <option value="grain">Grain</option>
+                            <option value="legume">Legume</option>
+                            <option value="spice">Spice</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-subcategory">Subcategory</label>
+                        <select id="product-subcategory" required>
+                            <option value="">Select Subcategory</option>
+                            <!-- Options will be populated based on category -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-price">Price per 1kg (ETB)</label>
+                            <input type="number" id="product-price" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="milling-price">Milling Price per 1kg (ETB)</label>
+                            <input type="number" id="milling-price" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-stock">Initial Stock (kg)</label>
+                        <input type="number" id="product-stock" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-image">Product Image</label>
+                        <input type="file" id="product-image" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-description">Description</label>
+                        <textarea id="product-description"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="scripts/main.js"></script>
+    <script src="scripts/admin.js"></script>
+</body>
+</html>
