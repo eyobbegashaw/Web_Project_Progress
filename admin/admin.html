@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MillPro</title>
+    
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Admin Dashboard -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="admin-profile">
+                <img id="adminAvatar" src="https://ui-avatars.com/api/?name=Admin&background=4CAF50&color=fff" alt="Admin">
+                <h3 id="adminName">System Admin</h3>
+                <p id="adminEmail">admin@millpro.com</p>
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-item active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#warehouse" class="nav-item"><i class="fas fa-warehouse"></i> Warehouse</a></li>
+                    <li><a href="#products" class="nav-item"><i class="fas fa-shopping-basket"></i> Products</a></li>
+                    <li><a href="#operators" class="nav-item"><i class="fas fa-users-cog"></i> Operators</a></li>
+                    <li><a href="#drivers" class="nav-item"><i class="fas fa-truck"></i> Drivers</a></li>
+                    <li><a href="#customers" class="nav-item"><i class="fas fa-users"></i> Customers</a></li>
+                    <li><a href="#finance" class="nav-item"><i class="fas fa-chart-pie"></i> Finance</a></li>
+                    <li><a href="#reports" class="nav-item"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="#settings" class="nav-item"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#messages" class="nav-item"><i class="fas fa-envelope"></i> Messages <span class="badge" id="messageCount">0</span></a></li>
+                    <!-- In the sidebar navigation section, add this after the operators menu item -->
+
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <span>System Online</span>
+                </div>
+                <p class="version">v1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1 id="pageTitle">Admin Dashboard</h1>
+                        <p id="currentDate" class="date-display"></p>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="quick-actions">
+                        <button class="btn btn-sm btn-outline" id="quickNotify">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount">3</span>
+                        </button>
+                        <button class="btn btn-sm btn-outline" id="adminDarkMode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary" id="refreshData">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <button id="logoutBtn" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="content-wrapper">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="content-section active">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon customers">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalCustomers">0</h3>
+                                <p>Total Customers</p>
+                            </div>
+                            <div class="stat-trend">
+                                <span class="trend-up"><i class="fas fa-arrow-up"></i> 12%</span>
+                                <small>This month</small>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon orders">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalOrders">0</h3>
+                                <p>Total Orders</p>
+                            </div>
+                            <div class="stat-trend">
+                                <span class="trend-up"><i class="fas fa-arrow-up"></i> 24%</span>
+                                <small>This month</small>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalRevenue">0 Birr</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                            <div class="stat-trend">
+                                <span class="trend-up"><i class="fas fa-arrow-up"></i> 18%</span>
+                                <small>This month</small>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon operators">
+                                <i class="fas fa-user-cog"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalOperators">0</h3>
+                                <p>Total Operators</p>
+                            </div>
+                            <div class="stat-trend">
+                                <span class="trend-neutral"><i class="fas fa-minus"></i> 0%</span>
+                                <small>Active</small>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon online">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="onlineCustomers">0</h3>
+                                <p>Online Customers</p>
+                            </div>
+                            <div class="stat-trend">
+                                <span class="trend-up"><i class="fas fa-arrow-up"></i> 32%</span>
+                                <small>Active today</small>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon inventory">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalInventory">0</h3>
+                                <p>Total Inventory (kg)</p>
+                            </div>
+                            <div class="stat-trend">
+                                <span class="trend-down"><i class="fas fa-arrow-down"></i> 8%</span>
+                                <small>This month</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="charts-container">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Orders Overview</h3>
+                                <select id="ordersPeriod" class="period-select">
+                                    <option value="week">This Week</option>
+                                    <option value="month" selected>This Month</option>
+                                    <option value="year">This Year</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="ordersChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Revenue Analytics</h3>
+                                <select id="revenuePeriod" class="period-select">
+                                    <option value="week">This Week</option>
+                                    <option value="month" selected>This Month</option>
+                                    <option value="year">This Year</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-card full-width">
+                            <div class="chart-header">
+                                <h3>Inventory Status</h3>
+                                <div class="chart-actions">
+                                    <button class="btn btn-sm btn-outline" id="refreshInventory">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="inventoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Recent Orders</h3>
+                            <a href="#orders" class="btn btn-sm btn-outline">View All</a>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="recentOrdersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Orders will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Warehouse Section -->
+                <section id="warehouse" class="content-section">
+                    <div class="section-header">
+                        <h2>Warehouse Management</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="addNewItem">
+                                <i class="fas fa-plus"></i> Add New Item
+                            </button>
+                            <button class="btn btn-outline" id="exportWarehouse">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Warehouse Summary -->
+                    <div class="warehouse-summary">
+                        <div class="summary-card">
+                            <h4>Total Investment</h4>
+                            <h2 id="totalInvestment">0 Birr</h2>
+                            <p>Current warehouse value</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Low Stock Items</h4>
+                            <h2 id="lowStockCount">0</h2>
+                            <p>Items below alert level</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Total Items</h4>
+                            <h2 id="totalItems">0</h2>
+                            <p>Different products</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Total Weight</h4>
+                            <h2 id="totalWeight">0 kg</h2>
+                            <p>Current inventory weight</p>
+                        </div>
+                    </div>
+
+                    <!-- Add Item Form -->
+                    <div class="form-card" id="addItemForm" style="display: none;">
+                        <h3>Add New Item to Warehouse</h3>
+                        <form id="warehouseForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="itemName">Item Name *</label>
+                                    <input type="text" id="itemName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="itemCategory">Category *</label>
+                                    <select id="itemCategory" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Grain">Grain</option>
+                                        <option value="Legume">Legume</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="purchasePrice">Purchase Price (Birr/kg) *</label>
+                                    <input type="number" id="purchasePrice" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sellPrice">Sell Price (Birr/kg) *</label>
+                                    <input type="number" id="sellPrice" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="totalQuantity">Total Quantity (kg) *</label>
+                                    <input type="number" id="totalQuantity" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="alertLevel">Alert Level (kg) *</label>
+                                    <input type="number" id="alertLevel" step="0.1" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="itemDescription">Description</label>
+                                <textarea id="itemDescription" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" id="cancelAddItem">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Item</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Warehouse Items Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Warehouse Items</h3>
+                            <div class="table-controls">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchWarehouse" placeholder="Search items...">
+                                </div>
+                                <select id="filterCategory" class="filter-select">
+                                    <option value="">All Categories</option>
+                                    <option value="Grain">Grains</option>
+                                    <option value="Legume">Legumes</option>
+                                    <option value="Other">Others</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="warehouseTable">
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Category</th>
+                                        <th>Quantity (kg)</th>
+                                        <th>Purchase Price</th>
+                                        <th>Sell Price</th>
+                                        <th>Total Investment</th>
+                                        <th>Alert Level</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Warehouse items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Inventory by Category -->
+                    <div class="category-cards">
+                        <div class="category-card">
+                            <h4><i class="fas fa-seedling"></i> Grains</h4>
+                            <div class="category-items" id="grainsList">
+                                <!-- Grains will be populated here -->
+                            </div>
+                        </div>
+                        <div class="category-card">
+                            <h4><i class="fas fa-leaf"></i> Legumes</h4>
+                            <div class="category-items" id="legumesList">
+                                <!-- Legumes will be populated here -->
+                            </div>
+                        </div>
+                        <div class="category-card">
+                            <h4><i class="fas fa-spice"></i> Others</h4>
+                            <div class="category-items" id="othersList">
+                                <!-- Others will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Products Section -->
+                <section id="products" class="content-section">
+                    <div class="section-header">
+                        <h2>Product Management</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="addProductBtn">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Form (Hidden by default) -->
+                    <div class="form-card" id="productFormCard" style="display: none;">
+                        <h3 id="productFormTitle">Add New Product</h3>
+                        <form id="productForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productName">Product Name *</label>
+                                    <input type="text" id="productName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productCategory">Category *</label>
+                                    <select id="productCategory" required >
+                                        <option value="">Select Category</option>
+                                        <option value="Grain">Grain</option>
+                                        <option value="Legume">Legume</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productSubcategory">Subcategory</label>
+                                    <select id="productSubcategory">
+                                        <option value="">Select Subcategory</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPrice">Price (Birr/kg) *</label>
+                                    <input type="number" id="productPrice" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="millingFee">Milling Fee (Birr/kg) *</label>
+                                    <input type="number" id="millingFee" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="minQuantity">Minimum Quantity (kg) *</label>
+                                    <input type="number" id="minQuantity" step="0.1" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productOrigin">Origin</label>
+                                    <input type="text" id="productOrigin">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productQuality">Quality Grade</label>
+                                    <select id="productQuality">
+                                        <option value="Grade A">Grade A</option>
+                                        <option value="Grade B">Grade B</option>
+                                        <option value="Grade C">Grade C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="productDescription">Description</label>
+                                <textarea id="productDescription" rows="3"></textarea>
+                            </div>
+                            
+                            <!-- <div class="form-group">
+                                <label for="productImage">Image URL</label>
+                                <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+                            </div> -->
+                            <div class="form-group">
+    <label for="productImage">Product Image</label>
+    <div class="image-upload-container">
+        <div class="image-preview" id="imagePreview">
+            <img id="productImagePreview" src="" alt="Image preview">
+            <div class="image-placeholder" id="imagePlaceholder">
+                <i class="fas fa-image"></i>
+                <span>No image selected</span>
+            </div>
+        </div>
+        <input type="file" id="productImageFile" accept="image/*" style="display: none;">
+        <button type="button" class="btn btn-outline" id="uploadImageBtn">
+            <i class="fas fa-upload"></i> Upload Image
+        </button>
+        <input type="hidden" id="productImageBase64">
+    </div>
+</div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" id="cancelProductForm">Cancel</button>
+                                <button type="button" class="btn btn-success" id="saveProductBtn">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <button type="button" class="btn btn-primary" id="postProductBtn" style="display: none;">
+                                    <i class="fas fa-paper-plane"></i> Post to Customers
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid-admin" id="productsGridAdmin">
+                        <!-- Products will be populated here -->
+                    </div>
+                </section>
+
+                <!-- Operators Section -->
+                <section id="operators" class="content-section">
+                    <div class="section-header">
+                        <h2>Operator Management</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="addOperatorBtn">
+                                <i class="fas fa-user-plus"></i> Add Operator
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Operators Grid -->
+                    <div class="operators-grid" id="operatorsGrid">
+                        <!-- Operators will be populated here -->
+                    </div>
+
+                    <!-- Assignments Section -->
+                    <div class="assignments-card">
+                        <h3>Operator Assignments</h3>
+                        <div class="assignments-list" id="assignmentsList">
+                            <!-- Assignments will be populated here -->
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Drivers Section -->
+<section id="drivers" class="content-section">
+    <div class="section-header">
+        <h2>Driver Management</h2>
+        <div class="section-actions">
+            <button class="btn btn-primary" id="addDriverBtn">
+                <i class="fas fa-user-plus"></i> Add Driver
+            </button>
+        </div>
+    </div>
+
+    <!-- Drivers Grid -->
+    <div class="drivers-grid" id="driversGrid">
+        <!-- Drivers will be populated here -->
+    </div>
+
+    <!-- Driver Assignments Section -->
+    <div class="assignments-card">
+        <h3>Driver Assignments</h3>
+        <div class="assignments-list" id="driverAssignmentsList">
+            <!-- Driver assignments will be populated here -->
+        </div>
+    </div>
+</section>
+
+
+                <!-- Customers Section -->
+                <section id="customers" class="content-section">
+                    <div class="section-header">
+                        <h2>Customer Management</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="exportCustomers">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Customers Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>All Customers</h3>
+                            <div class="table-controls">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchCustomers" placeholder="Search customers...">
+                                </div>
+                                <select id="filterCustomers" class="filter-select">
+                                    <option value="all">All Customers</option>
+                                    <option value="online">Online Only</option>
+                                    <option value="offline">Offline Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="customersTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Address</th>
+                                        <th>Orders</th>
+                                        <th>Total Spent</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Customers will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Finance Section -->
+                <section id="finance" class="content-section">
+                    <div class="section-header">
+                        <h2>Financial Management</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="addExpenseBtn">
+                                <i class="fas fa-plus"></i> Add Expense
+                            </button>
+                            <button class="btn btn-outline" id="generateReport">
+                                <i class="fas fa-file-pdf"></i> Generate Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Financial Overview -->
+                    <div class="finance-overview">
+                        <div class="finance-card income">
+                            <h4>Total Income</h4>
+                            <h2 id="totalIncome">0 Birr</h2>
+                            <p>From all orders</p>
+                        </div>
+                        <div class="finance-card expense">
+                            <h4>Total Expenses</h4>
+                            <h2 id="totalExpenses">0 Birr</h2>
+                            <p>Operational costs</p>
+                        </div>
+                        <div class="finance-card profit">
+                            <h4>Net Profit</h4>
+                            <h2 id="netProfit">0 Birr</h2>
+                            <p>This month</p>
+                        </div>
+                        <div class="finance-card tax">
+                            <h4>Tax Expense</h4>
+                            <h2 id="taxExpense">0 Birr</h2>
+                            <p>Annual</p>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="finance-charts">
+                        <div class="chart-card">
+                            <h3>Income vs Expenses</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="incomeExpenseChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Profit Trend</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="profitChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expenses Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Recent Expenses</h3>
+                            <button class="btn btn-sm btn-outline" id="viewAllExpenses">View All</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="expensesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Payment Method</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Expenses will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports" class="content-section">
+                    <div class="section-header">
+                        <h2>Reports & Analytics</h2>
+                        <div class="section-actions">
+                            <div class="date-range">
+                                <input type="date" id="reportStartDate">
+                                <span>to</span>
+                                <input type="date" id="reportEndDate">
+                            </div>
+                            <button class="btn btn-primary" id="generateCustomReport">
+                                <i class="fas fa-chart-bar"></i> Generate Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Report Options -->
+                    <div class="report-options">
+                        <div class="report-type">
+                            <h4>Report Type</h4>
+                            <div class="type-options">
+                                <label><input type="radio" name="reportType" value="sales" checked> Sales Report</label>
+                                <label><input type="radio" name="reportType" value="inventory"> Inventory Report</label>
+                                <label><input type="radio" name="reportType" value="customer"> Customer Report</label>
+                                <label><input type="radio" name="reportType" value="financial"> Financial Report</label>
+                            </div>
+                        </div>
+                        
+                        <div class="export-options">
+                            <h4>Export Format</h4>
+                            <div class="format-options">
+                                <button class="btn btn-outline" data-format="pdf">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </button>
+                                <button class="btn btn-outline" data-format="excel">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </button>
+                                <button class="btn btn-outline" data-format="csv">
+                                    <i class="fas fa-file-csv"></i> CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Preview -->
+                    <div class="report-preview">
+                        <div class="preview-header">
+                            <h3>Report Preview</h3>
+                            <button class="btn btn-sm btn-primary" id="printReport">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                        </div>
+                        <div class="preview-content" id="reportContent">
+                            <!-- Report content will be generated here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="content-section">
+                    <div class="section-header">
+                        <h2>System Settings</h2>
+                    </div>
+
+                    <div class="settings-tabs">
+                        <div class="tab-nav">
+                            <button class="tab-btn active" data-tab="profile">Profile</button>
+                            <button class="tab-btn" data-tab="system">System</button>
+                            <button class="tab-btn" data-tab="notifications">Notifications</button>
+                            <button class="tab-btn" data-tab="backup">Backup</button>
+                        </div>
+
+                        <div class="tab-content">
+                            <!-- Profile Settings -->
+                            <div class="tab-pane active" id="profile">
+                                <div class="profile-settings">
+                                    <div class="profile-picture">
+                                        <img id="currentProfilePic" src="https://ui-avatars.com/api/?name=Admin&background=4CAF50&color=fff" alt="Profile">
+                                        <button class="btn btn-outline" id="changePicture">
+                                            <i class="fas fa-camera"></i> Change Picture
+                                        </button>
+                                    </div>
+                                    
+                                    <form id="profileForm">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="adminFullName">Full Name</label>
+                                                <input type="text" id="adminFullName" value="System Admin">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="adminEmailSettings">Email</label>
+                                                <input type="email" id="adminEmailSettings" value="admin@millpro.com">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="adminPhone">Phone Number</label>
+                                                <input type="tel" id="adminPhone" value="+251911223344">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="adminLanguage">Language</label>
+                                                <select id="adminLanguage">
+                                                    <option value="en">English</option>
+                                                    <option value="am">Amharic</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="adminFontSize">Font Size</label>
+                                            <input type="range" id="adminFontSize" min="12" max="24" value="16">
+                                            <span id="fontSizeValue">16px</span>
+                                        </div>
+                                        
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- System Settings -->
+                            <div class="tab-pane" id="system">
+                                <div class="system-settings">
+                                    <h3>System Configuration</h3>
+                                    <div class="setting-item">
+                                        <label>
+                                            <input type="checkbox" id="autoBackup" checked>
+                                            <span>Automatic Backup</span>
+                                        </label>
+                                        <small>Backup data daily at 2:00 AM</small>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label>
+                                            <input type="checkbox" id="emailNotifications" checked>
+                                            <span>Email Notifications</span>
+                                        </label>
+                                        <small>Receive email alerts for important events</small>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label>
+                                            <input type="checkbox" id="smsNotifications">
+                                            <span>SMS Notifications</span>
+                                        </label>
+                                        <small>Send SMS alerts to operators</small>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label for="sessionTimeout">Session Timeout (minutes)</label>
+                                        <input type="number" id="sessionTimeout" value="30" min="5" max="240">
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button class="btn btn-primary" id="saveSystemSettings">Save Settings</button>
+                                        <button class="btn btn-danger" id="resetSystemSettings">Reset to Default</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notification Settings -->
+                            <div class="tab-pane" id="notifications">
+                                <div class="notification-settings">
+                                    <h3>Notification Preferences</h3>
+                                    <div class="notification-category">
+                                        <h4>Order Notifications</h4>
+                                        <div class="setting-item">
+                                            <label>
+                                                <input type="checkbox" id="newOrderNotify" checked>
+                                                <span>New Order Received</span>
+                                            </label>
+                                        </div>
+                                        <div class="setting-item">
+                                            <label>
+                                                <input type="checkbox" id="orderStatusNotify" checked>
+                                                <span>Order Status Updates</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="notification-category">
+                                        <h4>Inventory Notifications</h4>
+                                        <div class="setting-item">
+                                            <label>
+                                                <input type="checkbox" id="lowStockNotify" checked>
+                                                <span>Low Stock Alerts</span>
+                                            </label>
+                                        </div>
+                                        <div class="setting-item">
+                                            <label>
+                                                <input type="checkbox" id="inventoryUpdateNotify">
+                                                <span>Inventory Updates</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button class="btn btn-primary" id="saveNotificationSettings">Save Preferences</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Backup Settings -->
+                            <div class="tab-pane" id="backup">
+                                <div class="backup-settings">
+                                    <h3>Data Backup & Restore</h3>
+                                    <div class="backup-options">
+                                        <button class="btn btn-primary" id="backupNow">
+                                            <i class="fas fa-database"></i> Backup Now
+                                        </button>
+                                        <button class="btn btn-outline" id="restoreBackup">
+                                            <i class="fas fa-undo"></i> Restore Backup
+                                        </button>
+                                        <button class="btn btn-danger" id="deleteAllData">
+                                            <i class="fas fa-trash"></i> Delete All Data
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="backup-history">
+                                        <h4>Recent Backups</h4>
+                                        <div class="backup-list" id="backupList">
+                                            <!-- Backup list will be populated here -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="system-info">
+                                        <h4>System Information</h4>
+                                        <table>
+                                            <tr>
+                                                <td>Total Customers:</td>
+                                                <td id="sysTotalCustomers">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Products:</td>
+                                                <td id="sysTotalProducts">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Orders:</td>
+                                                <td id="sysTotalOrders">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Data Size:</td>
+                                                <td id="dataSize">0 KB</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Last Backup:</td>
+                                                <td id="lastBackup">Never</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Messages Section -->
+                <section id="messages" class="content-section">
+                    <div class="section-header">
+                        <h2>Messages</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="newMessageBtn">
+                                <i class="fas fa-plus"></i> New Message
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="messages-container">
+                        <div class="contacts-list">
+                            <div class="contacts-header">
+                                <h4>Contacts</h4>
+                                <div class="contact-search">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" placeholder="Search contacts...">
+                                </div>
+                            </div>
+                            <div class="contacts" id="contactsList">
+                                <!-- Contacts will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="chat-area">
+                            <div class="chat-header" id="chatHeader">
+                                <div class="chat-user">
+                                    <img src="https://ui-avatars.com/api/?name=Support&background=2196F3&color=fff" alt="Support">
+                                    <div>
+                                        <h4>System Support</h4>
+                                        <p>Online</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-messages" id="chatMessages">
+                                <!-- Messages will be displayed here -->
+                            </div>
+                            
+                            <div class="chat-input">
+                                <input type="text" placeholder="Type your message..." id="messageInput">
+                                <button class="btn btn-primary" id="sendMessageBtn">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="broadcast-panel">
+                            <h4>Broadcast Message</h4>
+                            <div class="broadcast-form">
+                                <select id="broadcastTo">
+                                    <option value="all">All Users</option>
+                                    <option value="customers">All Customers</option>
+                                    <option value="operators">All Operators</option>
+                                    <option value="drivers">All Drivers</option>
+                                </select>
+                                <textarea id="broadcastMessage" placeholder="Type broadcast message..." rows="4"></textarea>
+                                <button class="btn btn-primary btn-block" id="sendBroadcast">
+                                    <i class="fas fa-bullhorn"></i> Send Broadcast
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="operatorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="operatorModalTitle">Add Operator</h2>
+            <form id="operatorForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="operatorName">Full Name *</label>
+                        <input type="text" id="operatorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="operatorEmail">Email *</label>
+                        <input type="email" id="operatorEmail" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="operatorPhone">Phone *</label>
+                        <input type="tel" id="operatorPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="operatorPassword">Password *</label>
+                        <input type="password" id="operatorPassword" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="operatorAssignments">Assignments *</label>
+                    <div class="assignment-checkboxes">
+                        <label><input type="checkbox" name="assignment" value="Teff"> Teff</label>
+                        <label><input type="checkbox" name="assignment" value="Barley"> Barley</label>
+                        <label><input type="checkbox" name="assignment" value="Wheat"> Wheat</label>
+                        <label><input type="checkbox" name="assignment" value="Sorghum"> Sorghum</label>
+                        <label><input type="checkbox" name="assignment" value="Peas"> Peas</label>
+                        <label><input type="checkbox" name="assignment" value="Beans"> Beans</label>
+                        <label><input type="checkbox" name="assignment" value="Other"> Other</label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelOperator">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Operator</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+ <form id="warehouseForm">
+    <!-- form fields here -->  
+    <!-- <button type="submit">Save Item</button> -->
+</form>
+<!-- Notification Modal -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Notifications</h2>
+            <div class="notifications-list" id="notificationsList">
+                <!-- Notifications will be populated here -->
+            </div>
+        </div>
+    </div>
+ <!-- Driver Modal -->
+<div id="driverModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="driverModalTitle">Add Driver</h2>
+        <form id="driverForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="driverName">Full Name *</label>
+                    <input type="text" id="driverName" required>
+                </div>
+                <div class="form-group">
+                    <label for="driverEmail">Email *</label>
+                    <input type="email" id="driverEmail" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="driverPhone">Phone *</label>
+                    <input type="tel" id="driverPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="driverLicense">License Number *</label>
+                    <input type="text" id="driverLicense" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="driverPassword">Password *</label>
+                    <input type="password" id="driverPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="driverVehicle">Vehicle Type</label>
+                    <select id="driverVehicle">
+                        <option value="Truck">Truck</option>
+                        <option value="Van">Van</option>
+                        <option value="Pickup">Pickup</option>
+                        <option value="Motorcycle">Motorcycle</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="driverStatus">Status</label>
+                <select id="driverStatus">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="on_delivery">On Delivery</option>
+                    <option value="available">Available</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" id="cancelDriver">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Driver</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Driver Reset Password Modal -->
+<div id="resetDriverPasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Reset Driver Password</h2>
+        <form id="resetDriverPasswordForm">
+            <div class="form-group">
+                <label for="newDriverPassword">New Password *</label>
+                <input type="password" id="newDriverPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmDriverPassword">Confirm Password *</label>
+                <input type="password" id="confirmDriverPassword" required>
+            </div>
+            <input type="hidden" id="resetDriverId">
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" id="cancelResetDriverPassword">Cancel</button>
+                <button type="submit" class="btn btn-primary">Reset Password</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

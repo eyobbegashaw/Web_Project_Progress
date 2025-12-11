@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operator Dashboard - MillPro</title>
+    <link rel="stylesheet" href="operator.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNQgr7x81l-DjqaIIyzw81Go5aTOSvBqc&libraries=places,geometry"></script>
+</head>
+<body>
+    <!-- Operator Dashboard -->
+    <div class="operator-container">
+        <!-- Sidebar -->
+        <aside class="operator-sidebar">
+            <div class="operator-profile">
+                <img id="operatorAvatar" src="https://ui-avatars.com/api/?name=Operator&background=2196F3&color=fff" alt="Operator">
+                <div class="profile-info">
+                    <h3 id="operatorName">Operator Name</h3>
+                    <p id="operatorEmail">operator@millpro.com</p>
+                    <div class="operator-status">
+                        <span class="status-dot active"></span>
+                        <span id="operatorStatus">Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments Section -->
+            <div class="assignments-section">
+                <h4><i class="fas fa-tasks"></i> My Assignments</h4>
+                <div class="assignments-list" id="assignmentsList">
+                    <!-- Assignments will be populated here -->
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <div>
+                        <h4 id="todayOrders">0</h4>
+                        <small>Today's Orders</small>
+                    </div>
+                </div>
+                    <div class="stat-item">
+                    <i class="fas fa-truck"></i>
+                    <div>
+                        <h4 id="availableDrivers">0</h4>
+                        <small>Drivers Available</small>
+                    </div>
+                </div>
+                                <div class="stat-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h4 id="pendingOrders">0</h4>
+                        <small>Pending</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="operator-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-item active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a></li>
+                    <li><a href="#orders" class="nav-item">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>My Orders</span>
+                        <span class="badge" id="ordersBadge">0</span>
+                    </a></li>
+                    <li><a href="#offline" class="nav-item">
+                        <i class="fas fa-store"></i>
+                        <span>Offline Orders</span>
+                    </a></li>
+                    <li><a href="#drivers" class="nav-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Drivers</span>
+                    <span class="badge" id="availableDrivers">0</span>
+                    </a></li>
+                        <li><a href="#messages" class="nav-item">
+                        <i class="fas fa-comments"></i>
+                        <span>Messages</span>
+                        <span class="badge" id="messagesBadge">0</span>
+                    </a></li>
+                    <li><a href="#history" class="nav-item">
+                        <i class="fas fa-history"></i>
+                        <span>History</span>
+                    </a></li>
+                    <li><a href="#settings" class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <!-- Inventory Alert -->
+            <div class="inventory-alert" id="inventoryAlert" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Low inventory alert!</p>
+                <a href="#inventory" class="alert-link">View details</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="operator-main">
+            <!-- Header -->
+            <header class="operator-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1 id="pageTitle">Operator Dashboard</h1>
+                        <p id="currentDate" class="date-display"></p>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="quick-actions">
+                        <button class="btn btn-sm btn-outline" id="opDarkMode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline" id="notifyBtn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount">0</span>
+                        </button>
+                        <button class="btn btn-sm btn-primary" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <button id="logoutBtn" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="content-wrapper">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="content-section active">
+                    <!-- Welcome Card -->
+                    <div class="welcome-card">
+                        <div class="welcome-content">
+                            <h2>Welcome, <span id="operatorGreeting">Operator</span>!</h2>
+                            <p>You have <span id="pendingCount">0</span> pending orders to process today.</p>
+                            <div class="welcome-actions">
+                                <button class="btn btn-primary" id="startProcessing">
+                                    <i class="fas fa-play-circle"></i> Start Processing
+                                </button>
+                                <button class="btn btn-outline" id="viewAllOrders">
+                                    <i class="fas fa-list"></i> View All Orders
+                                </button>
+                            </div>
+                        </div>
+                        <div class="welcome-image">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats Grid -->
+                    <div class="quick-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon total">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalAssigned">0</h3>
+                                <p>Total Assigned Orders</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon completed">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="completedToday">0</h3>
+                                <p>Completed Today</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon processing">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="processingNow">0</h3>
+                                <p>Processing Now</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayEarnings">0 Birr</h3>
+                                <p>Today's Earnings</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Status -->
+                    <div class="inventory-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-warehouse"></i> Assigned Inventory Status</h3>
+                            <button class="btn btn-sm btn-outline" id="refreshInventory">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="inventory-list" id="assignedInventory">
+                            <!-- Inventory items will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="recent-orders">
+                        <div class="card-header">
+                            <h3><i class="fas fa-clock"></i> Recent Orders</h3>
+                            <a href="#orders" class="btn btn-sm btn-outline">View All</a>
+                        </div>
+                        <div class="orders-list" id="recentOrdersList">
+                            <!-- Recent orders will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions-grid">
+                        <div class="action-card" onclick="navigateToSection('orders')">
+                            <i class="fas fa-clipboard-check"></i>
+                            <h4>Process Orders</h4>
+                            <p>Update order status and send notifications</p>
+                        </div>
+                        <div class="action-card" onclick="navigateToSection('offline')">
+                            <i class="fas fa-store"></i>
+                            <h4>Record Offline Order</h4>
+                            <p>Record in-person orders and update inventory</p>
+                        </div>
+                        <div class="action-card" onclick="navigateToSection('messages')">
+                            <i class="fas fa-comments"></i>
+                            <h4>Customer Messages</h4>
+                            <p>Respond to customer inquiries</p>
+                        </div>
+                        <div class="action-card" onclick="showHelp()">
+                            <i class="fas fa-question-circle"></i>
+                            <h4>Help & Support</h4>
+                            <p>Get help with the system</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- My Orders Section -->
+                <section id="orders" class="content-section">
+                    <div class="section-header">
+                        <h2>My Orders</h2>
+                        <div class="section-actions">
+                            <div class="order-filters">
+                                <select id="orderFilter" class="filter-select">
+                                    <option value="all">All Orders</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <select id="orderSort" class="filter-select">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                    <option value="priority">High Priority</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" id="bulkUpdateBtn">
+                                <i class="fas fa-tasks"></i> Bulk Update
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Orders Table -->
+                    <div class="orders-table-container">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAllOrders">
+                                    </th>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Order Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <!-- Orders will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- No Orders Message -->
+                    <div class="empty-state" id="noOrdersMessage" style="display: none;">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>No Orders Assigned</h3>
+                        <p>You don't have any orders assigned to you yet.</p>
+                    </div>
+
+                    <!-- Order Details Modal -->
+                    <div class="order-details-modal" id="orderDetailsModal" style="display: none;">
+                        <div class="modal-header">
+                            <h3>Order Details</h3>
+                            <button class="close-modal" onclick="closeOrderDetails()">&times;</button>
+                        </div>
+                        <div class="modal-body" id="orderDetailsContent">
+                            <!-- Order details will be populated here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Offline Orders Section -->
+                <section id="offline" class="content-section">
+                    <div class="section-header">
+                        <h2>Offline Order Processing</h2>
+                        <p>Record in-person orders and update inventory</p>
+                    </div>
+
+                    <!-- Order Form -->
+                    <div class="offline-form-card">
+                        <h3><i class="fas fa-edit"></i> Record New Order</h3>
+                        <form id="offlineOrderForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customerType">Customer Type *</label>
+                                    <select id="customerType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="regular">Regular Customer</option>
+                                        <option value="new">New Customer</option>
+                                        <option value="walkin">Walk-in Customer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="customerName">Customer Name *</label>
+                                    <input type="text" id="customerName" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customerPhone">Phone Number *</label>
+                                    <input type="tel" id="customerPhone" required pattern="\+251[97]\d{8}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="orderType">Order Type *</label>
+                                    <select id="orderType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="purchase">Product Purchase</option>
+                                        <option value="milling">Milling Service</option>
+                                        <option value="both">Purchase & Milling</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Product Selection -->
+                            <div class="form-section">
+                                <h4>Product Details</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="productSelect">Product *</label>
+                                        <select id="productSelect" required>
+                                            <option value="">Select Product</option>
+                                            <!-- Products will be populated by JavaScript -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quantity">Quantity (kg) *</label>
+                                        <input type="number" id="quantity" step="0.1" min="0.1" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="pricePerKg">Price per kg *</label>
+                                        <input type="number" id="pricePerKg" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="millingFee">Milling Fee per kg</label>
+                                        <input type="number" id="millingFee" step="0.01">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Details -->
+                            <div class="form-section">
+                                <h4>Payment Details</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="totalAmount">Total Amount *</label>
+                                        <input type="number" id="totalAmount" step="0.01" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="paymentMethod">Payment Method *</label>
+                                        <select id="paymentMethod" required>
+                                            <option value="">Select Method</option>
+                                            <option value="cash">Cash</option>
+                                            <option value="cbe">CBE</option>
+                                            <option value="telebirr">Telebirr</option>
+                                            <option value="bank">Bank Transfer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paymentReference">Payment Reference (if any)</label>
+                                    <input type="text" id="paymentReference">
+                                </div>
+                            </div>
+
+                            <!-- Additional Notes -->
+                            <div class="form-group">
+                                <label for="orderNotes">Additional Notes</label>
+                                <textarea id="orderNotes" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="reset" class="btn btn-outline">Clear Form</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Order
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Recent Offline Orders -->
+                    <div class="recent-offline-orders">
+                        <div class="card-header">
+                            <h3><i class="fas fa-history"></i> Recent Offline Orders</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="offline-orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Payment</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="offlineOrdersTable">
+                                    <!-- Offline orders will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Messages Section -->
+                <section id="messages" class="content-section">
+                    <div class="section-header">
+                        <h2>Messages</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="newMessageBtn">
+                                <i class="fas fa-plus"></i> New Message
+                            </button>
+                            <button class="btn btn-outline" id="markAllRead">
+                                <i class="fas fa-check-double"></i> Mark All Read
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="messages-container">
+                        <!-- Contacts List -->
+                        <div class="contacts-panel">
+                            <div class="contacts-header">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchContacts" placeholder="Search contacts...">
+                                </div>
+                                <div class="contact-filters">
+                                    <select id="contactFilter" class="filter-select">
+                                        <option value="all">All Contacts</option>
+                                        <option value="customers">Customers</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="unread">Unread Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="contacts-list" id="contactsList">
+                                <!-- Contacts will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Chat Area -->
+                        <div class="chat-panel">
+                            <div class="chat-header" id="chatHeader">
+                                <!-- Chat header will be populated here -->
+                            </div>
+                            <div class="chat-messages" id="chatMessages">
+                                <!-- Messages will be displayed here -->
+                            </div>
+                            <div class="chat-input-area">
+                                <div class="input-tools">
+                                    <button class="btn btn-icon" onclick="attachImage()" title="Attach Image">
+                                        <i class="fas fa-image"></i>
+                                    </button>
+                                    <button class="btn btn-icon" onclick="attachDocument()" title="Attach Document">
+                                        <i class="fas fa-paperclip"></i>
+                                    </button>
+                                </div>
+                                <div class="message-input-wrapper">
+                                    <textarea id="messageInput" placeholder="Type your message..." rows="1"></textarea>
+                                    <button class="btn btn-primary" id="sendMessageBtn" disabled>
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                                <div class="attachment-preview" id="attachmentPreview" style="display: none;">
+                                    <!-- Attachment preview will be shown here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Info -->
+                        <div class="chat-info-panel" id="chatInfoPanel">
+                            <!-- Chat info will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- New Message Modal -->
+                    <div class="modal" id="newMessageModal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>New Message</h3>
+                                <button class="close-modal" onclick="closeNewMessageModal()">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="newMessageForm">
+                                    <div class="form-group">
+                                        <label for="recipientType">Send To</label>
+                                        <select id="recipientType" required>
+                                            <option value="">Select Recipient</option>
+                                            <option value="customer">Customer</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="all">All Assigned Customers</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="recipientSelectContainer" style="display: none;">
+                                        <label for="recipientSelect">Select Recipient</label>
+                                        <select id="recipientSelect">
+                                            <!-- Recipients will be populated here -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="messageSubject">Subject</label>
+                                        <input type="text" id="messageSubject" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newMessageContent">Message</label>
+                                        <textarea id="newMessageContent" rows="5" required></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-outline" onclick="closeNewMessageModal()">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Send Message</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--  Drivers Section -->
+                 <!-- Drivers Section -->
+<section id="drivers" class="content-section">
+    <div class="section-header">
+        <h2>Drivers Management</h2>
+        <div class="section-actions">
+            <button class="btn btn-primary" onclick="refreshDrivers()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button class="btn btn-outline" onclick="updateAllDriverLocations()">
+                <i class="fas fa-map-marker-alt"></i> Update Locations
+            </button>
+        </div>
+    </div>
+
+    <div class="drivers-container">
+        <div class="drivers-list">
+            <h3><i class="fas fa-truck"></i> Available Drivers</h3>
+            <div class="drivers-grid" id="driversList">
+                <!-- Drivers will be populated here -->
+            </div>
+        </div>
+        
+        <div class="drivers-map">
+            <div class="map-controls">
+                <h3><i class="fas fa-map-marked-alt"></i> Driver Locations</h3>
+                <div class="map-actions">
+                    <button class="btn btn-sm btn-outline" onclick="centerMapOnDrivers()">
+                        <i class="fas fa-crosshairs"></i> Center Map
+                    </button>
+                    <button class="btn btn-sm btn-outline" onclick="toggleTraffic()">
+                        <i class="fas fa-road"></i> Traffic
+                    </button>
+                </div>
+            </div>
+            <div class="map-container">
+                <div id="googleMap" style="width:100%;height:400px;border-radius:12px;"></div>
+            </div>
+            <div class="map-info">
+                <p><i class="fas fa-info-circle"></i> <strong>Live Tracking:</strong> Drivers update their location every 30 seconds</p>
+                <div class="map-legend">
+                    <span class="legend-item"><i class="fas fa-truck" style="color:#4CAF50"></i> Available</span>
+                    <span class="legend-item"><i class="fas fa-truck" style="color:#FF9800"></i> On Delivery</span>
+                    <span class="fas fa-truck" style="color:#F44336"></i> Busy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+            
+          
+                <!-- History Section -->
+                <section id="history" class="content-section">
+                    <div class="section-header">
+                        <h2>Order History</h2>
+                        <div class="section-actions">
+                            <div class="date-range">
+                                <input type="date" id="historyStartDate">
+                                <span>to</span>
+                                <input type="date" id="historyEndDate">
+                            </div>
+                            <button class="btn btn-primary" id="filterHistory">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                            <button class="btn btn-outline" id="exportHistory">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- History Stats -->
+                    <div class="history-stats">
+                        <div class="stat-card">
+                            <h4>Total Orders Processed</h4>
+                            <h2 id="totalProcessed">0</h2>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Total Revenue</h4>
+                            <h2 id="totalRevenue">0 Birr</h2>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Avg. Processing Time</h4>
+                            <h2 id="avgProcessingTime">0h</h2>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Customer Rating</h4>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span id="ratingValue">4.5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order History Table -->
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Order Date</th>
+                                    <th>Completed Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <!-- History will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" id="historyPagination">
+                        <button class="btn btn-outline" id="prevPage">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <div class="page-info">
+                            Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                        </div>
+                        <button class="btn btn-outline" id="nextPage">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="content-section">
+                    <div class="section-header">
+                        <h2>Settings</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="saveSettings">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-tabs">
+                        <div class="tab-nav">
+                            <button class="tab-btn active" data-tab="profile">Profile</button>
+                            <button class="tab-btn" data-tab="preferences">Preferences</button>
+                            <button class="tab-btn" data-tab="notifications">Notifications</button>
+                            <button class="tab-btn" data-tab="security">Security</button>
+                        </div>
+
+                        <div class="tab-content">
+                            <!-- Profile Tab -->
+                            <div class="tab-pane active" id="profile">
+                                <div class="profile-settings">
+                                    <div class="profile-picture-section">
+                                        <div class="profile-picture">
+                                            <img id="currentProfilePic" src="https://ui-avatars.com/api/?name=Operator&background=2196F3&color=fff" alt="Profile">
+                                            <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                                        <div class="picture-actions">
+                                            <button class="btn btn-sm btn-outline" onclick="changeProfilePicture()">
+                                                <i class="fas fa-camera"></i> Change
+                                            </button>
+                                            <button class="btn btn-sm btn-outline" onclick="removeProfilePicture()">
+                                                <i class="fas fa-trash"></i> Remove
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    <form id="profileForm">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="opFullName">Full Name *</label>
+                                                <input type="text" id="opFullName" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="opEmail">Email Address *</label>
+                                                <input type="email" id="opEmail" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="opPhone">Phone Number *</label>
+                                                <input type="tel" id="opPhone" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="opLanguage">Language</label>
+                                                <select id="opLanguage">
+                                                    <option value="en">English</option>
+                                                    <option value="am">Amharic</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="opAddress">Address</label>
+                                                <textarea id="opAddress" rows="2"></textarea>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Preferences Tab -->
+                            <div class="tab-pane" id="preferences">
+                                <div class="preference-settings">
+                                    <h3>System Preferences</h3>
+                                    
+                                    <div class="preference-item">
+                                        <label>
+                                            <input type="checkbox" id="autoRefresh" checked>
+                                            <span>Auto-refresh dashboard</span>
+                                        </label>
+                                        <small>Automatically refresh data every 5 minutes</small>
+                                    </div>
+
+                                    <div class="preference-item">
+                                        <label for="fontSize">Font Size</label>
+                                        <input type="range" id="fontSize" min="12" max="24" value="16">
+                                        <span id="fontSizeValue">16px</span>
+                                    </div>
+
+                                    <div class="preference-item">
+                                        <label for="itemsPerPage">Items Per Page</label>
+                                        <select id="itemsPerPage">
+                                            <option value="10">10 items</option>
+                                            <option value="25" selected>25 items</option>
+                                            <option value="50">50 items</option>
+                                            <option value="100">100 items</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="preference-item">
+                                        <label for="defaultView">Default View</label>
+                                        <select id="defaultView">
+                                            <option value="dashboard">Dashboard</option>
+                                            <option value="orders">My Orders</option>
+                                            <option value="messages">Messages</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="preference-item">
+                                        <label>
+                                            <input type="checkbox" id="showNotifications" checked>
+                                            <span>Show desktop notifications</span>
+                                        </label>
+                                        <small>Show notifications for new orders and messages</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notifications Tab -->
+                            <div class="tab-pane" id="notifications">
+                                <div class="notification-settings">
+                                    <h3>Notification Preferences</h3>
+                                    
+                                    <div class="notification-category">
+                                        <h4>Order Notifications</h4>
+                                        <div class="notification-item">
+                                            <label>
+                                                <input type="checkbox" id="newOrderNotify" checked>
+                                                <span>New Order Assignment</span>
+                                            </label>
+                                        </div>
+                                        <div class="notification-item">
+                                            <label>
+                                                <input type="checkbox" id="orderUpdateNotify" checked>
+                                                <span>Order Status Updates</span>
+                                            </label>
+                                        </div>
+                                        <div class="notification-item">
+                                            <label>
+                                                <input type="checkbox" id="orderCompleteNotify">
+                                                <span>Order Completion</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="notification-category">
+                                        <h4>Message Notifications</h4>
+                                        <div class="notification-item">
+                                            <label>
+                                                <input type="checkbox" id="newMessageNotify" checked>
+                                                <span>New Messages</span>
+                                            </label>
+                                        </div>
+                                        <div class="notification-item">
+                                            <label>
+                                                <input type="checkbox" id="adminMessageNotify" checked>
+                                                <span>Messages from Admin</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="notification-category">
+                                        <h4>System Notifications</h4>
+                                        <div class="notification-item">
+                                            <label>
+                                                <input type="checkbox" id="lowStockNotify" checked>
+                                                <span>Low Stock Alerts</span>
+                                            </label>
+                                        </div>
+                                        <div class="notification-item">
+                                            <label>
+                                                <input type="checkbox" id="systemUpdateNotify">
+                                                <span>System Updates</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Security Tab -->
+                            <div class="tab-pane" id="security">
+                                <div class="security-settings">
+                                    <h3>Security Settings</h3>
+                                    
+                                    <div class="security-section">
+                                        <h4>Change Password</h4>
+                                        <form id="changePasswordForm">
+                                            <div class="form-group">
+                                                <label for="currentPassword">Current Password *</label>
+                                                <input type="password" id="currentPassword" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="newPassword">New Password *</label>
+                                                <input type="password" id="newPassword" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="confirmPassword">Confirm Password *</label>
+                                                <input type="password" id="confirmPassword" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Change Password</button>
+                                        </form>
+                                    </div>
+
+                                    <div class="security-section">
+                                        <h4>Session Management</h4>
+                                        <div class="session-item">
+                                            <p><strong>Current Session:</strong> Started today at 08:30 AM</p>
+                                            <button class="btn btn-sm btn-outline" onclick="logoutOtherSessions()">
+                                                Logout Other Sessions
+                                            </button>
+                                        </div>
+                                        <div class="session-item">
+                                            <label>
+                                                <input type="checkbox" id="autoLogout" checked>
+                                                <span>Auto-logout after 30 minutes of inactivity</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="security-section">
+                                        <h4>Two-Factor Authentication</h4>
+                                        <div class="two-factor-item">
+                                            <p>Add an extra layer of security to your account</p>
+                                            <button class="btn btn-outline" id="enable2FA">
+                                                <i class="fas fa-shield-alt"></i> Enable 2FA
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal" id="notificationModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Notifications</h3>
+                <button class="close-modal" onclick="closeNotificationModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="notifications-list" id="notificationsList">
+                    <!-- Notifications will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Help & Support</h3>
+                <button class="close-modal" onclick="closeHelpModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-content">
+                    <h4><i class="fas fa-question-circle"></i> How to Process Orders</h4>
+                    <ol>
+                        <li>Go to "My Orders" section</li>
+                        <li>Select an order to view details</li>
+                        <li>Update order status as needed</li>
+                        <li>Send notifications to customer</li>
+                        <li>Update inventory after completion</li>
+                    </ol>
+
+                    <h4><i class="fas fa-phone"></i> Contact Support</h4>
+                    <p>If you need assistance, contact:</p>
+                    <ul>
+                        <li><strong>Admin:</strong> admin@millpro.com</li>
+                        <li><strong>Phone:</strong> +251 911 223344</li>
+                        <li><strong>Hours:</strong> Mon-Sat, 8:00 AM - 8:00 PM</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="operator.js"></script>
+</body>
+</html>

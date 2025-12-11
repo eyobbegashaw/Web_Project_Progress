@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - MillPro</title>
+    <!-- <link rel="stylesheet" href="../styles.css"> -->
+    <link rel="stylesheet" href="customer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Customer Dashboard -->
+    <div class="customer-container">
+        <!-- Header -->
+        <header class="customer-header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <h1>Mill<span>Pro</span></h1>
+                </div>
+                <nav class="main-nav">
+                    <a href="#dashboard" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#products" class="nav-link">
+                        <i class="fas fa-store"></i>
+                        <span>Products</span>
+                    </a>
+                    <a href="#cart" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                    <a href="#orders" class="nav-link">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <a href="#special" class="nav-link">
+                        <i class="fas fa-star"></i>
+                        <span>Special Orders</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-profile">
+                    <img id="customerAvatar" src="https://ui-avatars.com/api/?name=Customer&background=FF9800&color=fff" alt="Customer">
+                    <div class="user-info">
+                        <h3 id="customerName">Customer Name</h3>
+                        <p id="customerEmail">customer@email.com</p>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-btn">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="#settings"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#messages"><i class="fas fa-envelope"></i> Messages</a>
+                            <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+                            <hr>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-icon" id="darkModeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-icon" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationCount">0</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="customer-main">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner">
+                    <div class="welcome-content">
+                        <h2>Welcome back, <span id="customerGreeting">Customer</span>!</h2>
+                        <p>Ready to order fresh grains and milling services?</p>
+                        <div class="welcome-stats">
+                            <div class="stat">
+                                <h3 id="totalOrdersCount">0</h3>
+                                <p>Total Orders</p>
+                            </div>
+                            <div class="stat">
+                                <h3 id="pendingOrdersCount">0</h3>
+                                <p>Pending</p>
+                            </div>
+                            <div class="stat">
+                                <h3 id="completedOrdersCount">0</h3>
+                                <p>Completed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="welcome-image">
+                        <i class="fas fa-shopping-basket"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="action-card" onclick="navigateToSection('products')">
+                        <i class="fas fa-store"></i>
+                        <h4>Browse Products</h4>
+                        <p>Shop fresh grains & legumes</p>
+                    </div>
+                    <div class="action-card" onclick="navigateToSection('special')">
+                        <i class="fas fa-star"></i>
+                        <h4>Special Order</h4>
+                        <p>Milling service for your grains</p>
+                    </div>
+                    <div class="action-card" onclick="navigateToSection('cart')">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h4>View Cart</h4>
+                        <p><span id="cartItemsCount">0</span> items</p>
+                    </div>
+                    <div class="action-card" onclick="navigateToSection('orders')">
+                        <i class="fas fa-history"></i>
+                        <h4>Order History</h4>
+                        <p>Track your orders</p>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="recent-orders-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clock"></i> Recent Orders</h3>
+                        <a href="#orders" class="btn btn-sm btn-outline">View All</a>
+                    </div>
+                    <div class="orders-list" id="recentOrdersList">
+                        <!-- Recent orders will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Product Recommendations -->
+                <div class="recommendations-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heart"></i> Recommended For You</h3>
+                    </div>
+                    <div class="recommendations-grid" id="recommendationsGrid">
+                        <!-- Recommended products will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section id="products" class="content-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2>Our Products</h2>
+                        <p>Fresh grains, legumes, and milling services</p>
+                    </div>
+                    <div class="section-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="productSearch" placeholder="Search products...">
+                        </div>
+                        <div class="filter-controls">
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="all">All Categories</option>
+                                <option value="grain">Grains</option>
+                                <option value="legume">Legumes</option>
+                                <option value="other">Others</option>
+                            </select>
+                            <select id="sortFilter" class="filter-select">
+                                <option value="featured">Featured</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="name">Name: A to Z</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be populated here -->
+                </div>
+
+                <!-- No Products Message -->
+                <div class="empty-state" id="noProductsMessage" style="display: none;">
+                    <i class="fas fa-store"></i>
+                    <h3>No Products Found</h3>
+                    <p>Try changing your search or filter criteria</p>
+                </div>
+            </section>
+
+            <!-- Cart Section -->
+            <section id="cart" class="content-section">
+                <div class="section-header">
+                    <h2>Shopping Cart</h2>
+                    <div class="cart-summary" id="cartSummary">
+                        <span><span id="cartTotalItems">0</span> items</span>
+                        <span>Total: <strong id="cartTotalPrice">0 Birr</strong></span>
+                    </div>
+                </div>
+
+                <div class="cart-container">
+                    <!-- Cart Items -->
+                    <div class="cart-items" id="cartItems">
+                        <!-- Cart items will be populated here -->
+                    </div>
+
+                    <!-- Empty Cart -->
+                    <div class="empty-cart" id="emptyCart" style="display: none;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Your cart is empty</h3>
+                        <p>Add some products to get started!</p>
+                        <button class="btn btn-primary" onclick="navigateToSection('products')">
+                            <i class="fas fa-store"></i> Browse Products
+                        </button>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-details">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="subtotal">0 Birr</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Milling Service</span>
+                                <span id="millingTotal">0 Birr</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Order Fee</span>
+                                <span>20 Birr</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total</span>
+                                <span id="orderTotal">0 Birr</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" id="checkoutBtn" disabled>
+                            <i class="fas fa-shopping-bag"></i> Proceed to Checkout
+                        </button>
+                        <button class="btn btn-outline btn-block" onclick="navigateToSection('products')">
+                            <i class="fas fa-plus"></i> Continue Shopping
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Saved Items -->
+                <div class="saved-items-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heart"></i> Saved for Later</h3>
+                    </div>
+                    <div class="saved-items" id="savedItems">
+                        <!-- Saved items will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Orders Section -->
+            <section id="orders" class="content-section">
+                <div class="section-header">
+                    <h2>My Orders</h2>
+                    <div class="order-filters">
+                        <select id="orderStatusFilter" class="filter-select">
+                            <option value="all">All Orders</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <div class="date-range">
+                            <input type="date" id="orderStartDate">
+                            <span>to</span>
+                            <input type="date" id="orderEndDate">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders List -->
+                <div class="orders-container" id="ordersContainer">
+                    <!-- Orders will be populated here -->
+                </div>
+
+                <!-- No Orders Message -->
+                <div class="empty-state" id="noOrdersMessage" style="display: none;">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>No Orders Yet</h3>
+                    <p>Start shopping to place your first order!</p>
+                    <button class="btn btn-primary" onclick="navigateToSection('products')">
+                        <i class="fas fa-store"></i> Browse Products
+                    </button>
+                </div>
+            </section>
+
+            <!-- Special Orders Section -->
+            <section id="special" class="content-section">
+                <div class="section-header">
+                    <h2>Special Orders</h2>
+                    <p>Get milling service for your own grains</p>
+                </div>
+
+                <!-- Special Order Form -->
+                <div class="special-order-form">
+                    <div class="form-card">
+                        <h3><i class="fas fa-star"></i> Create Special Order</h3>
+                        <form id="specialOrderForm">
+                            <div class="form-group">
+                                <label for="specialProductType">Product Type *</label>
+                                <select id="specialProductType" required>
+                                    <option value="">Select Product Type</option>
+                                    <option value="teff">Teff</option>
+                                    <option value="barley">Barley</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="sorghum">Sorghum</option>
+                                    <option value="legume">Legume</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="specialQuantity">Quantity (kg) *</label>
+                                    <input type="number" id="specialQuantity" step="0.1" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="millingType">Milling Type *</label>
+                                    <select id="millingType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="regular">Regular Milling</option>
+                                        <option value="fine">Fine Milling</option>
+                                        <option value="coarse">Coarse Milling</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pickupAddress">Pickup Address *</label>
+                                    <input type="text" id="pickupAddress" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="deliveryAddress">Delivery Address *</label>
+                                    <input type="text" id="deliveryAddress" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pickupDate">Pickup Date *</label>
+                                    <input type="date" id="pickupDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="deliveryDate">Delivery Date *</label>
+                                    <input type="date" id="deliveryDate" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="specialInstructions">Special Instructions</label>
+                                <textarea id="specialInstructions" rows="3" placeholder="Any special requirements for milling..."></textarea>
+                            </div>
+
+                            <!-- Price Calculation -->
+                            <div class="price-calculation">
+                                <h4>Price Calculation</h4>
+                                <div class="calculation-row">
+                                    <span>Milling Fee (per kg):</span>
+                                    <span id="millingFeeRate">10 Birr</span>
+                                </div>
+                                <div class="calculation-row">
+                                    <span>Transport Fee (per km):</span>
+                                    <span>5 Birr</span>
+                                </div>
+                                <div class="calculation-row">
+                                    <span>Distance (estimated):</span>
+                                    <span id="estimatedDistance">0 km</span>
+                                </div>
+                                <div class="calculation-row total">
+                                    <span>Total Price:</span>
+                                    <span id="specialOrderTotal">0 Birr</span>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="calculateSpecialOrder()">
+                                    <i class="fas fa-calculator"></i> Calculate
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Place Special Order
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Special Orders History -->
+                    <div class="special-orders-history">
+                        <div class="card-header">
+                            <h3><i class="fas fa-history"></i> Special Orders History</h3>
+                        </div>
+                        <div class="history-list" id="specialOrdersHistory">
+                            <!-- Special orders history will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages" class="content-section">
+                <div class="section-header">
+                    <h2>Messages</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" id="newMessageBtn">
+                            <i class="fas fa-plus"></i> New Message
+                        </button>
+                        <button class="btn btn-outline" id="markAllReadBtn">
+                            <i class="fas fa-check-double"></i> Mark All Read
+                        </button>
+                    </div>
+                </div>
+
+                <div class="messages-container">
+                    <!-- Contacts Panel -->
+                    <div class="contacts-panel">
+                        <div class="contacts-header">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="messageSearch" placeholder="Search messages...">
+                            </div>
+                        </div>
+                        <div class="contacts-list" id="messagesContacts">
+                            <!-- Contacts will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Chat Panel -->
+                    <div class="chat-panel">
+                        <div class="chat-header" id="chatHeader">
+                            <!-- Chat header will be populated here -->
+                        </div>
+                        <div class="chat-messages" id="chatMessages">
+                            <!-- Messages will be displayed here -->
+                        </div>
+                        <div class="chat-input">
+                            <div class="input-tools">
+                                <button class="btn btn-icon" onclick="attachImageToMessage()">
+                                    <i class="fas fa-image"></i>
+                                </button>
+                                <button class="btn btn-icon" onclick="attachFileToMessage()">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                            </div>
+                            <div class="message-input">
+                                <textarea id="messageInput" placeholder="Type your message..." rows="1"></textarea>
+                                <button class="btn btn-primary" id="sendMessageBtn" disabled>
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Info Panel -->
+                    <div class="message-info-panel" id="messageInfoPanel">
+                        <!-- Message info will be populated here -->
+                    </div>
+                </div>
+
+                <!-- New Message Modal -->
+                <div class="modal" id="newMessageModal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>New Message</h3>
+                            <button class="close-modal" onclick="closeNewMessageModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="newMessageForm">
+                                <div class="form-group">
+                                    <label for="messageTo">To *</label>
+                                    <select id="messageTo" required>
+                                        <option value="">Select Recipient</option>
+                                        <option value="admin">System Admin</option>
+                                        <!-- Operators will be populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="messageSubject">Subject *</label>
+                                    <input type="text" id="messageSubject" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="messageContent">Message *</label>
+                                    <textarea id="messageContent" rows="5" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="messageType">Message Type</label>
+                                    <select id="messageType">
+                                        <option value="general">General Inquiry</option>
+                                        <option value="order">Order Related</option>
+                                        <option value="complaint">Complaint</option>
+                                        <option value="suggestion">Suggestion</option>
+                                        <option value="feedback">Feedback</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-outline" onclick="closeNewMessageModal()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Send Message</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="section-header">
+                    <h2>Account Settings</h2>
+                </div>
+
+                <div class="settings-container">
+                    <!-- Profile Settings -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-user"></i> Profile Settings</h3>
+                        <form id="profileSettingsForm">
+                            <div class="profile-picture-section">
+                                <div class="profile-picture">
+                                    <img id="settingsAvatar" src="https://ui-avatars.com/api/?name=Customer&background=FF9800&color=fff" alt="Profile">
+                                    <div class="picture-actions">
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="changeProfilePicture()">
+                                            <i class="fas fa-camera"></i> Change
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="removeProfilePicture()">
+                                            <i class="fas fa-trash"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fullName">Full Name *</label>
+                                    <input type="text" id="fullName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address *</label>
+                                    <input type="email" id="email" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number *</label>
+                                    <input type="tel" id="phone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="backupPhone">Backup Phone</label>
+                                    <input type="tel" id="backupPhone">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address">Address *</label>
+                                <textarea id="address" rows="3" required></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-credit-card"></i> Payment Methods</h3>
+                        <div class="payment-methods" id="paymentMethods">
+                            <!-- Payment methods will be populated here -->
+                        </div>
+                        <button class="btn btn-outline btn-block" onclick="addPaymentMethod()">
+                            <i class="fas fa-plus"></i> Add Payment Method
+                        </button>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-cog"></i> Preferences</h3>
+                        <div class="preferences-list">
+                            <div class="preference-item">
+                                <label>
+                                    <input type="checkbox" id="darkModePref" class="dark-mode-pref">
+                                    <span>Dark Mode</span>
+                                </label>
+                            </div>
+                            <div class="preference-item">
+                                <label>
+                                    <input type="checkbox" id="emailNotifications" checked>
+                                    <span>Email Notifications</span>
+                                </label>
+                            </div>
+                            <div class="preference-item">
+                                <label>
+                                    <input type="checkbox" id="smsNotifications">
+                                    <span>SMS Notifications</span>
+                                </label>
+                            </div>
+                            <div class="preference-item">
+                                <label for="languagePref">Language</label>
+                                <select id="languagePref">
+                                    <option value="en">English</option>
+                                    <option value="am">Amharic</option>
+                                </select>
+                            </div>
+                            <div class="preference-item">
+                                <label for="fontSize">Font Size</label>
+                                <input type="range" id="fontSize" min="12" max="24" value="16">
+                                <span id="fontSizeValue">16px</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="savePreferences()">
+                            <i class="fas fa-save"></i> Save Preferences
+                        </button>
+                    </div>
+
+                    <!-- Security -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-shield-alt"></i> Security</h3>
+                        <form id="securityForm">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password *</label>
+                                <input type="password" id="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password *</label>
+                                <input type="password" id="newPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password *</label>
+                                <input type="password" id="confirmPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-key"></i> Change Password
+                            </button>
+                        </form>
+
+                        <div class="security-actions">
+                            <button class="btn btn-outline btn-block" onclick="showLoginHistory()">
+                                <i class="fas fa-history"></i> View Login History
+                            </button>
+                            <button class="btn btn-outline btn-block" onclick="logoutOtherSessions()">
+                                <i class="fas fa-sign-out-alt"></i> Logout Other Sessions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Order Modal -->
+        <div class="modal" id="orderModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Place Order</h3>
+                    <button class="close-modal" onclick="closeOrderModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="orderModalContent">
+                    <!-- Order form will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Panel -->
+        <div class="notification-panel" id="notificationPanel" style="display:none;">
+            <div class="panel-header">
+                <h3>Notifications</h3>
+                <button class="close-panel" onclick="closeNotificationPanel()">&times;</button>
+            </div>
+            <div class="notifications-list" id="notificationsList">
+                <!-- Notifications will be populated here -->
+            </div>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div class="modal" id="checkoutModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Checkout</h3>
+                    <button class="close-modal" onclick="closeCheckoutModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="checkoutContent">
+                    <!-- Checkout form will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="customer.js"></script>
+</body>
+</html>

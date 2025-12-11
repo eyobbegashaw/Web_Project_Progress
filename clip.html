@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Air Max Dia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* Card with custom clip-path shape */
+        .card {
+            position: relative;
+            height: 750px;
+            width: 650px;
+            background: url('https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80') 
+                        rgba(0, 0, 0, 0.45) no-repeat center center/cover;
+            clip-path: path('M 10,20 L 60,20 A 10,10 0,0,0 70,10 L 70,10 A 10,10 0,0,1 80,0 L 140,0 A 10,10 0,0,1 150,10 L 150,190 A 10,10 0,0,1 140,200 L 10,200 A 10,10 0,0,1 0,190 L 0,30 A 10,10 0,0,1 10,20 Z');
+            overflow: hidden;
+        }
+
+        /* Custom shaped title badge using clip-path */
+        .title {
+            position: absolute;
+            top: 25px;
+            left: 20px;
+            height: 17px;
+            width: 67px;
+            background: #5e3023;
+            clip-path: inset(0.5px round 8px 0);
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+            z-index: 10;
+        }
+
+        /* Product information overlay */
+        .product-info {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            color: white;
+        }
+
+        .brand {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .product-name {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        /* Buy Now button */
+        .buy-btn {
+            padding: 10px 25px;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            background: #5e3023;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Image inside the card (alternative to background) */
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Card with custom shape -->
+    <div class="card">
+        <!-- Custom shaped title badge -->
+        <div class="title">NEW</div>
+        
+        <!-- Alternative: Image inside the card -->
+        <!-- <img src="shoe.jpg" alt="Nike Air Max Dia" class="card-img"> -->
+        
+        <!-- Product information -->
+        <div class="product-info">
+            <div class="brand">Nike</div>
+            <div class="product-name">Air Max Dia</div>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+    </div>
+
+    <script>
+        // Simple hover effect
+        const card = document.querySelector('.card');
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'scale(1.02)';
+            card.style.transition = 'transform 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'scale(1)';
+        });
+        
+        // Buy button click effect
+        const buyBtn = document.querySelector('.buy-btn');
+        buyBtn.addEventListener('click', function() {
+            const originalText = this.textContent;
+            const originalBackground = this.style.background;
+            const originalColor = this.style.color;
+            
+            this.textContent = 'Added ✓';
+            this.style.background = '#4CAF50';
+            this.style.color = 'white';
+            
+            setTimeout(() => {
+                this.textContent = originalText;
+                this.style.background = originalBackground;
+                this.style.color = originalColor;
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

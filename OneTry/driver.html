@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Delivery System</title>
+    <link rel="stylesheet" href="driver.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body class="light-mode">
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="driver-profile">
+                    <div class="profile-image-container">
+                        <img src="https://ui-avatars.com/api/?name=Driver+8573&background=3498db&color=fff&size=100" 
+                             alt="Driver" class="profile-image" id="profileImage">
+                        <div class="profile-overlay" id="changeProfileBtn">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <input type="file" id="profileUpload" accept="image/*" style="display: none;">
+                    <h3>Driver #8573</h3>
+                    <p class="driver-email">driver8573@delivery.com</p>
+                    <div class="driver-status-sidebar">
+                        <span class="status-indicator status-offline" id="sidebarStatusIndicator"></span>
+                        <span id="sidebarStatusText">Offline</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li data-section="new-orders">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>My New Orders</span>
+                        <span class="badge" id="newOrdersBadge">3</span>
+                    </li>
+                    <li data-section="current-status">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Current Order Status</span>
+                    </li>
+                    <li data-section="proof-delivery">
+                        <i class="fas fa-receipt"></i>
+                        <span>Proof of Delivery</span>
+                    </li>
+                    <li data-section="navigation">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Navigation & Route</span>
+                    </li>
+                    <li data-section="communication">
+                        <i class="fas fa-comments"></i>
+                        <span>Communication</span>
+                    </li>
+                    <li data-section="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="dark-mode-toggle">
+                    <i class="fas fa-moon"></i>
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button class="btn btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="top-nav-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="currentSectionTitle">Dashboard</h1>
+                </div>
+                <div class="top-nav-right">
+                    <div class="status-selector-container">
+                        <select id="status-selector" class="status-selector">
+                            <option value="offline">Offline</option>
+                            <option value="online">Online</option>
+                            <option value="busy">Busy</option>
+                        </select>
+                    </div>
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">2</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section class="content-section active" id="dashboardSection">
+                <div class="dashboard-grid">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <div class="stats-content">
+                            <h3>Total Orders</h3>
+                            <p class="stats-value">12</p>
+                            <p class="stats-change">+2 this week</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stats-content">
+                            <h3>Delivered</h3>
+                            <p class="stats-value">8</p>
+                            <p class="stats-change">100% on time</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stats-content">
+                            <h3>Active Orders</h3>
+                            <p class="stats-value">3</p>
+                            <p class="stats-change">In progress</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stats-content">
+                            <h3>Earnings</h3>
+                            <p class="stats-value">$245.50</p>
+                            <p class="stats-change">Today's earnings</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real Google Maps Implementation -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-map-marker-alt"></i> My Current Location</h2>
+                    <div id="currentLocationMap" class="real-map"></div>
+                    <div class="location-info">
+                        <p><strong>Last Updated:</strong> <span id="locationTimestamp">Just now</span></p>
+                        <button class="btn btn-primary" id="refreshLocation">
+                            <i class="fas fa-sync-alt"></i> Refresh Location
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon success">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>Order #ORD-1003 delivered successfully</p>
+                                <span class="activity-time">10 minutes ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon warning">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>New order assigned: ORD-1004</p>
+                                <span class="activity-time">25 minutes ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon info">
+                                <i class="fas fa-info"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>Status changed to Online</p>
+                                <span class="activity-time">1 hour ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My New Orders Section -->
+            <section class="content-section" id="newOrdersSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-clipboard-list"></i> My New Orders</h2>
+                    <button class="btn btn-primary" id="refreshOrders">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+
+                <div class="orders-grid">
+                    <!-- Orders will be populated by JavaScript -->
+                </div>
+
+                <!-- Order Details Modal -->
+                <div class="modal" id="orderDetailsModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Order Details</h3>
+                            <button class="modal-close" id="closeModal">&times;</button>
+                        </div>
+                        <div class="modal-body" id="modalBody">
+                            <!-- Order details will be loaded here -->
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" id="rejectOrderBtn">Reject Order</button>
+                            <button class="btn btn-primary" id="acceptOrderBtn">Accept Order</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Current Order Status Section -->
+            <section class="content-section" id="currentStatusSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-sync-alt"></i> Current Order Status</h2>
+                    <div class="status-update-form">
+                        <select id="statusUpdateSelect" class="form-select">
+                            <option value="">Update Status...</option>
+                            <option value="pickup_started">Pickup Started</option>
+                            <option value="picked_up">Picked Up</option>
+                            <option value="on_the_way">On the Way</option>
+                            <option value="arrived">Arrived at Location</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                        <button class="btn btn-primary" id="updateStatusBtn">Update</button>
+                    </div>
+                </div>
+
+                <div class="status-timeline-container">
+                    <div class="status-timeline">
+                        <!-- Timeline will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="status-messages">
+                    <h3><i class="fas fa-broadcast-tower"></i> Status Broadcast</h3>
+                    <div class="message-form">
+                        <textarea id="statusMessage" placeholder="Enter status message to broadcast to customer and operator..."></textarea>
+                        <div class="message-actions">
+                            <div class="recipient-select">
+                                <label><input type="checkbox" id="sendToCustomer" checked> Customer</label>
+                                <label><input type="checkbox" id="sendToOperator" checked> Operator</label>
+                                <label><input type="checkbox" id="sendToAdmin"> Admin</label>
+                            </div>
+                            <button class="btn btn-primary" id="broadcastStatus">
+                                <i class="fas fa-paper-plane"></i> Broadcast Status
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Proof of Delivery Section -->
+            <section class="content-section" id="proofDeliverySection">
+                <div class="section-header">
+                    <h2><i class="fas fa-receipt"></i> Proof of Delivery</h2>
+                </div>
+
+                <div class="proof-delivery-container">
+                    <div class="proof-section">
+                        <div class="proof-card">
+                            <h3><i class="fas fa-camera"></i> Upload Delivery Photo</h3>
+                            <div class="photo-upload-area" id="photoUploadArea">
+                                <div class="upload-placeholder" id="uploadPlaceholder">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag & drop</p>
+                                    <p class="upload-hint">Supports JPG, PNG up to 5MB</p>
+                                </div>
+                                <div class="photo-preview" id="photoPreview">
+                                    <!-- Photo preview will appear here -->
+                                </div>
+                                <input type="file" id="deliveryPhoto" accept="image/*" capture="environment" class="hidden-input">
+                            </div>
+                            <div class="upload-controls">
+                                <button class="btn btn-secondary" id="retakePhoto">
+                                    <i class="fas fa-redo"></i> Retake
+                                </button>
+                                <button class="btn btn-primary" id="uploadPhotoBtn">
+                                    <i class="fas fa-upload"></i> Upload Photo
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="proof-card">
+                            <h3><i class="fas fa-signature"></i> Customer Signature</h3>
+                            <div class="signature-container">
+                                <canvas id="signatureCanvas" width="500" height="200"></canvas>
+                                <div class="signature-instructions">
+                                    <p>Please ask the customer to sign above</p>
+                                </div>
+                            </div>
+                            <div class="signature-controls">
+                                <button class="btn btn-secondary" id="clearSignature">
+                                    <i class="fas fa-eraser"></i> Clear
+                                </button>
+                                <button class="btn btn-primary" id="saveSignature">
+                                    <i class="fas fa-save"></i> Save Signature
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-confirmation">
+                        <h3><i class="fas fa-check-circle"></i> Delivery Confirmation</h3>
+                        <div class="confirmation-form">
+                            <div class="form-group">
+                                <label for="deliveryTime">Delivery Time</label>
+                                <input type="datetime-local" id="deliveryTime" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipientName">Recipient Name</label>
+                                <input type="text" id="recipientName" class="form-input" placeholder="Enter recipient's name">
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryNotes">Delivery Notes</label>
+                                <textarea id="deliveryNotes" class="form-textarea" placeholder="Any additional notes..."></textarea>
+                            </div>
+                            <button class="btn btn-success" id="confirmDelivery">
+                                <i class="fas fa-check-double"></i> Confirm Delivery Complete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation & Route Section -->
+            <section class="content-section" id="navigationSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-map-marked-alt"></i> Navigation & Route</h2>
+                    <button class="btn btn-primary" id="getDirections">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </button>
+                </div>
+
+                <div class="navigation-container">
+                    <div class="route-map" id="routeMap"></div>
+                    
+                    <div class="route-info">
+                        <div class="destination-card">
+                            <h3><i class="fas fa-map-pin"></i> Next Destination</h3>
+                            <div class="destination-details">
+                                <p><strong>Address:</strong> <span id="nextDestAddress">123 Main St, New York, NY</span></p>
+                                <p><strong>Customer:</strong> <span id="nextDestCustomer">John Smith</span></p>
+                                <p><strong>Phone:</strong> <span id="nextDestPhone">***-***-1234</span></p>
+                                <p><strong>Estimated Time:</strong> <span id="nextDestETA">15 minutes</span></p>
+                            </div>
+                        </div>
+
+                        <div class="route-instructions">
+                            <h3><i class="fas fa-route"></i> Route Instructions</h3>
+                            <div class="instructions-list" id="instructionsList">
+                                <!-- Route instructions will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Communication Section -->
+            <section class="content-section" id="communicationSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-comments"></i> Communication</h2>
+                </div>
+
+                <div class="communication-container">
+                    <div class="contacts-panel">
+                        <div class="contact-type">
+                            <h3><i class="fas fa-user"></i> Customer</h3>
+                            <div class="contact-card">
+                                <div class="contact-info">
+                                    <h4 id="currentCustomerName">John Smith</h4>
+                                    <p><i class="fas fa-phone"></i> <span id="currentCustomerPhone">***-***-1234</span></p>
+                                    <p><i class="fas fa-map-marker-alt"></i> <span id="currentCustomerAddress">123 Main St, NY</span></p>
+                                </div>
+                                <button class="btn btn-call" id="callCustomerBtn">
+                                    <i class="fas fa-phone"></i> Call Customer
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="contact-type">
+                            <h3><i class="fas fa-headset"></i> Operator</h3>
+                            <div class="contact-card">
+                                <div class="contact-info">
+                                    <h4>Support Center</h4>
+                                    <p><i class="fas fa-phone"></i> 1-800-OPERATOR</p>
+                                    <p><i class="fas fa-clock"></i> Available 24/7</p>
+                                </div>
+                                <button class="btn btn-call" id="callOperatorBtn">
+                                    <i class="fas fa-phone"></i> Call Operator
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="contact-type">
+                            <h3><i class="fas fa-user-shield"></i> Admin</h3>
+                            <div class="contact-card">
+                                <div class="contact-info">
+                                    <h4>Administration</h4>
+                                    <p><i class="fas fa-phone"></i> 1-800-ADMIN</p>
+                                    <p><i class="fas fa-envelope"></i> admin@delivery.com</p>
+                                </div>
+                                <button class="btn btn-call" id="callAdminBtn">
+                                    <i class="fas fa-phone"></i> Call Admin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="messages-panel">
+                        <div class="messages-header">
+                            <h3>Messages</h3>
+                            <select id="messageRecipient" class="form-select">
+                                <option value="customer">Customer</option>
+                                <option value="operator">Operator</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        
+                        <div class="messages-container" id="messagesContainer">
+                            <!-- Messages will appear here -->
+                        </div>
+                        
+                        <div class="message-input">
+                            <textarea id="messageInput" placeholder="Type your message..."></textarea>
+                            <button class="btn btn-primary" id="sendMessageBtn">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settingsSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                </div>
+
+                <div class="settings-container">
+                    <div class="settings-card">
+                        <h3><i class="fas fa-user-circle"></i> Profile Settings</h3>
+                        <div class="settings-form">
+                            <div class="form-group">
+                                <label for="driverName">Full Name</label>
+                                <input type="text" id="driverName" class="form-input" value="Driver #8573">
+                            </div>
+                            <div class="form-group">
+                                <label for="driverEmail">Email Address</label>
+                                <input type="email" id="driverEmail" class="form-input" value="driver8573@delivery.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="driverPhone">Phone Number</label>
+                                <input type="tel" id="driverPhone" class="form-input" value="+1 (555) 123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicleType">Vehicle Type</label>
+                                <select id="vehicleType" class="form-input">
+                                    <option value="car">Car</option>
+                                    <option value="motorcycle" selected>Motorcycle</option>
+                                    <option value="bicycle">Bicycle</option>
+                                    <option value="truck">Truck</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" id="updateProfileBtn">
+                                <i class="fas fa-save"></i> Update Profile
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3><i class="fas fa-key"></i> Password Reset</h3>
+                        <div class="settings-form">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-input">
+                            </div>
+                            <button class="btn btn-primary" id="resetPasswordBtn">
+                                <i class="fas fa-key"></i> Reset Password
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+                        <div class="settings-form">
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="emailNotifications" checked>
+                                    Email Notifications
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="smsNotifications" checked>
+                                    SMS Notifications
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="pushNotifications" checked>
+                                    Push Notifications
+                                </label>
+                            </div>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="newOrderAlerts" checked>
+                                    New Order Alerts
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="statusUpdateAlerts" checked>
+                                    Status Update Alerts
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="messageAlerts" checked>
+                                    Message Alerts
+                                </label>
+                            </div>
+                            <button class="btn btn-primary" id="saveNotificationsBtn">
+                                <i class="fas fa-save"></i> Save Preferences
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="notificationToast">
+        <div class="toast-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="toastMessage">Notification message</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="driver.js"></script>
+</body>
+</html>
